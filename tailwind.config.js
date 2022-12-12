@@ -1,9 +1,19 @@
 /** @type {import('tailwindcss').Config} */
+
+const palette = require('./palette')
+
 module.exports = {
-  content: [],
+  purge: [
+    './src/**/*.html',
+    './src/**/*.vue',
+    './src/**/*.jsx'
+  ],
   presets: [],
   darkMode: 'media', // or 'class'
   theme: {
+    extend: {
+      colors: palette
+    },
     screens: {
       sm: '640px',
       md: '768px',
