@@ -76,6 +76,7 @@
 import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useField } from 'vee-validate'
+import { useToast } from 'vue-toastification'
 import useModal from '@/hooks/useModal'
 import { validateEmptyAndLength3, validateEmptyAndEmail } from '@/utils/validators'
 import services from '@/services'
@@ -84,6 +85,7 @@ export default {
   setup () {
     const router = useRouter()
     const modal = useModal()
+    const toast = useToast()
 
     // useField faz validação dos valores do form e retorna mensagem de erro
     // as validações são passados no segundo parâmetro
@@ -112,6 +114,7 @@ export default {
 
     async function handleSubmit () {
       try {
+        toast.clear()
         state.isLoading = true
         const { data, errors } = await services.auth.login({
           email: state.email.value,
@@ -127,20 +130,20 @@ export default {
         }
 
         if (errors.status === 404) {
-          console.log('E-mail não encontrado')
+          toast.error('E-mail não encontrado')
         }
         if (errors.status === 401) {
-          console.log('E-mail/senha inválidos')
+          toast.error('E-mail/senha inválidos')
         }
         if (errors.status === 400) {
-          console.log('Ocorreu um erro ao fazer o login')
+          toast.error('Ocorreu um erro ao fazer o login')
         }
 
         state.isLoading = false
       } catch (error) {
         state.isLoading = false
         state.hasErrors = !!error
-        console.log('Ocorreu um erro ao fazer o login')
+        toast.error('Ocorreu um erro ao fazer o login')
       }
     }
 
