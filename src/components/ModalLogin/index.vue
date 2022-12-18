@@ -65,8 +65,8 @@
         }"
         class="px-8 py-3 mt-10 text-2xl font-bold text-white rounded-full bg-brand-main focus:outline-none transition-all duration-150"
       >
-        <icon v-if="state.isLoading" name="loading" class="animate-spin" />
-        <span v-else>Entrar</span>
+        <!-- <icon v-if="state.isLoading" name="loading" class="animate-spin" /> -->
+        <span>Entrar</span>
       </button>
     </form>
   </div>
@@ -74,12 +74,15 @@
 
 <script>
 import { reactive } from 'vue'
+import { useRouter } from 'vue-router'
 import { useField } from 'vee-validate'
 import useModal from '@/hooks/useModal'
 import { validateEmptyAndLength3, validateEmptyAndEmail } from '@/utils/validators'
+import services from '@/services'
 
 export default {
   setup () {
+    const router = useRouter()
     const modal = useModal()
 
     // useField faz validação dos valores do form e retorna mensagem de erro
@@ -107,8 +110,38 @@ export default {
       }
     })
 
-    function handleSubmit () {
+    async function handleSubmit () {
+      try {
+        state.isLoading = true
+        const { data, errors } = await services.auth.login({
+          email: state.email.value,
+          password: state.password.value
+        })
 
+        if (!errors) {
+          window.localStorage.setItem('token', data.token)
+          router.push({ name: 'Feedbacks' })
+          state.isLoading = false
+          modal.close()
+          return
+        }
+
+        if (errors.status === 404) {
+          console.log('E-mail não encontrado')
+        }
+        if (errors.status === 401) {
+          console.log('E-mail/senha inválidos')
+        }
+        if (errors.status === 400) {
+          console.log('Ocorreu um erro ao fazer o login')
+        }
+
+        state.isLoading = false
+      } catch (error) {
+        state.isLoading = false
+        state.hasErrors = !!error
+        console.log('Ocorreu um erro ao fazer o login')
+      }
     }
 
     return {
