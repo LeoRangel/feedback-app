@@ -4,10 +4,11 @@
 </template>
 
 <script>
+import Copy from './Copy.vue'
 import Loading from './Loading.vue'
 
 export default {
-  components: { Loading },
+  components: { Loading, Copy },
   props: {
     name: { type: String, required: true }
   }
