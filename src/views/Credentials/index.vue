@@ -67,12 +67,10 @@
       />
       <div
         v-else
-        class="py-3 pl-5 pr-20 mt-2 rounded bg-brand-gray w-full lg:w-2/3 overflow-x-scroll"
+        class="py-3 pl-5 pr-20 mt-2 rounded bg-brand-gray w-full lg:w-1/2 overflow-x-scroll"
       >
         <span v-if="state.hasError">Error loading script</span>
-        <pre v-else>
-          &lt;script src="https://leorangel-feedbacker-widget.netlify.app/apiKey={{store.User.currentUser.apiKey}}"&gt;&lt;/script&gt;
-        </pre>
+        <pre v-else>&lt;script src="https://leorangel-feedbacker-widget.netlify.app/apiKey={{store.User.currentUser.apiKey}}"&gt;&lt;/script&gt;</pre>
       </div>
 
     </div>
