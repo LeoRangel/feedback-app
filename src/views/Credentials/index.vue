@@ -37,6 +37,8 @@
         <span v-else id="apikey">{{ store.User.currentUser.apiKey }}</span>
         <div v-if="!state.hasError" class="flex ml-20 mr-5">
           <icon
+            @click="handleCopyApyKey"
+            id="copy-apikey"
             name="copy"
             :color="brandColors.graydark"
             size="24"
@@ -79,6 +81,7 @@
 
 <script>
 import { reactive, watch } from 'vue'
+import { useToast } from 'vue-toastification'
 import palette from '../../../palette'
 import useStore from '@/hooks/useStore'
 import ContentLoader from '@/components/ContentLoader'
@@ -99,6 +102,7 @@ export default {
       isLoading: false
     })
     const store = useStore()
+    const toast = useToast()
 
     // verifica se tem api key quando houver request na página
     // define o erro quando não está carregando e não foi gerada a api key
@@ -125,10 +129,22 @@ export default {
       }
     }
 
+    async function handleCopyApyKey () {
+      toast.clear()
+
+      try {
+        await navigator.clipboard.writeText(store.User.currentUser.apiKey)
+        toast.success('Copied!')
+      } catch (error) {
+        handleError(error)
+      }
+    }
+
     return {
       state,
       store,
       brandColors: palette.brand,
+      handleCopyApyKey,
       handleGenerateApiKey
     }
   }
