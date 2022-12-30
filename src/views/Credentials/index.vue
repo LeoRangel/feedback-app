@@ -23,7 +23,14 @@
         This is your api key
       </p>
 
+      <content-loader
+        v-if="store.Global.isLoading || state.isLoading"
+        class="rounded"
+        width="600px"
+        height="50px"
+      />
       <div
+        v-else
         class="flex py-3 pl-5 mt-2 rounded justify-between items-center bg-brand-gray w-full lg:w-1/2"
       >
         <span id="apikey">{{ store.User.currentUser.apiKey }}</span>
@@ -48,7 +55,14 @@
         Place the script below on your website to start getting feedback
       </p>
 
+      <content-loader
+        v-if="store.Global.isLoading || state.isLoading"
+        class="rounded"
+        width="600px"
+        height="50px"
+      />
       <div
+        v-else
         class="py-3 pl-5 pr-20 mt-2 rounded bg-brand-gray w-full lg:w-2/3 overflow-x-scroll"
       >
         <pre>
@@ -61,20 +75,27 @@
 </template>
 
 <script>
-import HeaderLogged from '@/components/HeaderLogged'
-import useStore from '@/hooks/useStore'
-import Icon from '@/components/Icon'
+import { reactive } from 'vue'
 import palette from '../../../palette'
+import useStore from '@/hooks/useStore'
+import ContentLoader from '@/components/ContentLoader'
+import HeaderLogged from '@/components/HeaderLogged'
+import Icon from '@/components/Icon'
 
 export default {
   components: {
+    ContentLoader,
     HeaderLogged,
     Icon
   },
   setup () {
+    const state = reactive({
+      isLoading: false
+    })
     const store = useStore()
 
     return {
+      state,
       store,
       brandColors: palette.brand
     }
