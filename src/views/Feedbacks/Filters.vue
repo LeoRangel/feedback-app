@@ -69,7 +69,7 @@ function applyFiltersStructure (summary) {
 }
 
 export default {
-  async setup (props, { emit }) {
+  async setup (_, { emit }) {
     const store = useStore('Global')
     const state = reactive({
       hasError: false,
